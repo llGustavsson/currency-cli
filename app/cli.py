@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 import typer
 
 from app.api import APIError, get_history, get_rates
+from app.ui import display_rates
 
 app = typer.Typer(name = "currency", help="CLI for getting exchange rates.")
 
@@ -28,7 +29,8 @@ def rates(base: str = typer.Option("EUR", "--base", "-b"),
     targets = [target.strip() for target in to.split(",")] if to else None
 
     try:
-        print(get_rates(base=base, targets=targets))
+        data = get_rates(base=base, targets=targets)
+        display_rates(data)
 
     except APIError():
         raise typer.Exit()
