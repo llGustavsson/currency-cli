@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 import typer
 
 from app.api import APIError, get_history, get_rates
-from app.ui import display_rates
+from app.ui import display_history, display_rates
 
 app = typer.Typer(name = "currency", help="CLI for getting exchange rates.")
 
@@ -43,7 +43,9 @@ def history(base: str = typer.Option("EUR", "--base", "-b"),
     start_date, end_date = calc_period(period)
 
     try:
-        print(get_history(start_date=start_date, end_date=end_date, base=base, target=to))
+        data = get_history(start_date=start_date, end_date=end_date, base=base, target=to)
+
+        display_history(data)
 
     except APIError:
         raise typer.Exit()

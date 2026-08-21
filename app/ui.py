@@ -22,5 +22,89 @@ def display_rates(data: dict[str, Any]):
 
     console.print(table)
 
-def display_history():
-    pass
+def display_history(data: dict[str, Any]):
+    base = data.get("base", "N/A")
+    rates_by_date = data.get("rates", {})
+
+    sorted_dates = sorted(rates_by_date.keys())
+    first_entry = rates_by_date[sorted_dates[0]]
+    targets = sorted(first_entry.keys())
+
+    table = Table(title=f"Historical Rates for 1 {base} ({sorted_dates[0]} 🠆 {sorted_dates[-1]})\n",
+                  show_header=True,
+                  header_style="bold magenta")
+
+    table.add_column("Date", style="dim", justify="left")
+
+    for target in targets:
+        table.add_column(f"1 {base} 🠆 {target}", justify="right")
+
+    prev_rates: dict[str, float] = {}
+    symbol_series: dict[str, list[float]] = {t: [] for t in targets}
+
+    for date_str in sorted_dates:
+        row_cells = [date_str]
+        current_rates = rates_by_date[date_str]
+
+        for target in targets:
+            rate = current_rates.get(target)
+            symbol_series[target].append(rate)
+
+            if target in prev_rates:
+                prev = prev_rates[target]
+
+                if prev > 0:
+                    pct_change = ((rate - prev) / prev) * 100
+
+                else:
+                    pct_change = 0.0
+
+                if rate > prev:
+                    cell_text = f"[bold green]🠵 {rate:.4f} (+{pct_change:.2f}%)[/bold green]"
+
+                elif rate < prev:
+                    cell_text = f"[bold red]🠷 {rate:.4f} (+{pct_change:.2f}%)[/bold red]"
+
+            else:
+                cell_text = f"{rate:.4f}"
+
+            prev_rates[target] = rate
+            row_cells.append(cell_text)
+
+        table.add_row(*row_cells)
+
+    table.add_section()
+
+    summary_cells = ["[bold magenta]Summary[/bold magenta]"]
+    for target in targets:
+        series = symbol_series[target]
+
+        low = min(series)
+        high = max(series)
+        first_rate = series[0]
+        last_rate = series[-1]
+
+        if first_rate > 0:
+            total_return = ((last_rate - first_rate) / first_rate) * 100
+
+        else:
+            total_return = 0.0
+
+        if total_return > 0:
+            return_str = f"[bold green]+{total_return:.2f}%[/bold green]"
+
+        elif total_return < 0:
+            return_str = f"[bold red]+{total_return:.2f}%[/bold red]"
+
+        else:
+            return_str = "[dim]0.00%[/dim]"
+
+        summary_text = (f"[dim] Low:[/dim] {low:.4f}\n"
+                        f"[dim] High:[/dim] {high:.4f}\n"
+                        f"[dim] Total Return:[/dim] {return_str}\n")
+
+        summary_cells.append(summary_text)
+
+    table.add_row(*summary_cells)
+
+    console.print(table)
