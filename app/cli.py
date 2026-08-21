@@ -49,3 +49,7 @@ def history(base: str = typer.Option("EUR", "--base", "-b"),
 
     except APIError:
         raise typer.Exit()
+
+@app.command(name="currencies")
+def currencies():
+    pass
