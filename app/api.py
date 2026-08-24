@@ -21,21 +21,18 @@ def get_rates(base: str, targets: list[str] | None):
 
         return response.json()
 
-    except httpx.HTTPStatusError:
-        raise APIError()
-
-    except httpx.RequestError:
+    except (httpx.HTTPStatusError, httpx.RequestError):
         raise APIError()
 
 def get_history(start_date: str, 
                 end_date: str, 
                 base: str, 
-                target: str | None):
+                targets: list[str]| None):
 
     params: dict[str, Any] = {"base": base.upper()}
 
-    if target:
-        params["symbols"] = target.upper() 
+    if targets:
+        params["symbols"] = ",".join(target.upper() for target in targets)
 
     try:
         response = httpx.get(f"{BASE_URL}/{start_date}..{end_date}",
@@ -46,8 +43,5 @@ def get_history(start_date: str,
 
         return response.json()
 
-    except httpx.HTTPStatusError:
-        raise APIError()
-
-    except httpx.RequestError:
+    except (httpx.HTTPStatusError, httpx.RequestError):
         raise APIError()
