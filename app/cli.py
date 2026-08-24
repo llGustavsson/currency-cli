@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import typer
 
@@ -14,7 +14,7 @@ PRESET_DAYS = {"7d": 7,
 
 def calc_period(period: str):
     period_clean = period.lower().strip()
-    today = datetime.now(timezone.utc).date()
+    today = datetime.now(UTC).date()
 
     if period_clean in PRESET_DAYS:
         days = PRESET_DAYS[period_clean]
@@ -32,8 +32,8 @@ def rates(base: str = typer.Option("EUR", "--base", "-b"),
         data = get_rates(base=base, targets=targets)
         display_rates(data)
 
-    except APIError():
-        raise typer.Exit()
+    except APIError:
+        raise typer.Exit(code=1)
 
 @app.command(name="history")
 def history(base: str = typer.Option("EUR", "--base", "-b"),
@@ -48,7 +48,7 @@ def history(base: str = typer.Option("EUR", "--base", "-b"),
         display_history(data)
 
     except APIError:
-        raise typer.Exit()
+        raise typer.Exit(code=1)
 
 @app.command(name="currencies")
 def currencies():
