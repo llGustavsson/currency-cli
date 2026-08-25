@@ -129,3 +129,21 @@ def display_all_currencies(data: dict[str, str ]):
 
     console.print(table)
         
+
+# UI FOR CONVERT
+def display_conversion(data: dict[str, Any ]):
+    base = data.get("base", "N/A")
+    date = data.get("date", "N/A")
+    amount = data.get("amount", "N/A")
+
+    table = Table(title=f"Conversion for {amount} {base} {date}",
+                  show_header=True,
+                  header_style="bold magenta")
+
+    table.add_column("Target", style="cyan", justify="left")
+    table.add_column("Converted Amount", style="green", justify="right")
+
+    for currency, converted_value in data["conversions"].items():
+        table.add_row(currency, f"{converted_value:.2f}")
+
+    console.print(table)
