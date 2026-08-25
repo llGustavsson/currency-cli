@@ -2,11 +2,13 @@ from datetime import UTC, datetime, timedelta
 
 import typer
 
-from app.api import APIError, get_history, get_rates
+from app.api import APIError, get_currencies, get_history, get_rates
 from app.ui import display_history, display_rates
 
 app = typer.Typer(name = "currency", help="CLI for getting exchange rates.")
 
+
+# DAYS PRESET AND PERIOD CALCULATION
 PRESET_DAYS = {"7d": 7,
                "14d": 14,
                "1m": 30,
@@ -22,6 +24,8 @@ def calc_period(period: str):
 
         return start_date.isoformat(), today.isoformat()
 
+
+# CLI COMMAND FOR RATES
 @app.command(name="rates")
 def rates(base: str = typer.Option("EUR", "--base", "-b"), 
           to: None | str = typer.Option(None, "--to", "-t")):
@@ -35,6 +39,8 @@ def rates(base: str = typer.Option("EUR", "--base", "-b"),
     except APIError:
         raise typer.Exit(code=1)
 
+
+#CLI COMMAND FOR HISTORY
 @app.command(name="history")
 def history(base: str = typer.Option("EUR", "--base", "-b"),
             to: None | str = typer.Option(None, "--to", "-t"),
@@ -50,6 +56,10 @@ def history(base: str = typer.Option("EUR", "--base", "-b"),
     except APIError:
         raise typer.Exit(code=1)
 
+
+# CLI COMMANDO FOR CURRENCIES
 @app.command(name="currencies")
 def currencies():
-    pass
+    data = get_currencies()
+
+    print(data)

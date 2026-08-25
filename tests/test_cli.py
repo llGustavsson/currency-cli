@@ -6,6 +6,8 @@ from app.cli import app
 
 runner = CliRunner()
 
+
+# TESTS FOR RATES COMMAND
 @patch("app.cli.get_rates")
 def test_rates_command(mock_get_rates):
     mock_get_rates.return_value = {"base": "USD",
@@ -21,6 +23,7 @@ def test_rates_command_fail():
     assert result.exit_code == 2
 
 
+# TESTS FOR HISTORY COMMAND
 @patch("app.cli.get_history")
 def test_history_command(mock_get_history):
     mock_get_history.return_value = {"base": "USD",

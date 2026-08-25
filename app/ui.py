@@ -5,6 +5,8 @@ from rich.table import Table
 
 console = Console()
 
+
+# UI FOR RATES
 def display_rates(data: dict[str, Any]):
     base = data.get("base", "N/A")
     date = data.get("date", "N/A")
@@ -22,6 +24,8 @@ def display_rates(data: dict[str, Any]):
 
     console.print(table)
 
+
+# UI FOR HISTORY
 def display_history(data: dict[str, Any]):
     base = data.get("base", "N/A")
     rates_by_date = data.get("rates", {})

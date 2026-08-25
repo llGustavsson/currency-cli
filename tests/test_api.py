@@ -6,6 +6,7 @@ import pytest
 from app.api import APIError, get_history, get_rates
 
 
+# TESTS FOR RATES
 @patch("httpx.get")
 def test_get_rates(mock_get):
     mock_response = MagicMock()
@@ -39,6 +40,7 @@ def test_get_rates_fail(mock_get):
         get_rates(base="INVALID", targets=None)
 
 
+# TESTS FOR HISTORY 
 @patch("httpx.get")
 def test_get_history(mock_get):
     mock_response = MagicMock()
