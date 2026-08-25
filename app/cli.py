@@ -3,7 +3,7 @@ from datetime import UTC, datetime, timedelta
 import typer
 
 from app.api import APIError, get_currencies, get_history, get_rates
-from app.ui import display_history, display_rates
+from app.ui import display_all_currencies, display_history, display_rates
 
 app = typer.Typer(name = "currency", help="CLI for getting exchange rates.")
 
@@ -62,4 +62,8 @@ def history(base: str = typer.Option("EUR", "--base", "-b"),
 def currencies():
     data = get_currencies()
 
-    print(data)
+    try:
+        display_all_currencies(data)
+
+    except APIError:
+        raise typer.Exit(code=1)

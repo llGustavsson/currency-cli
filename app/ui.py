@@ -112,3 +112,20 @@ def display_history(data: dict[str, Any]):
     table.add_row(*summary_cells)
 
     console.print(table)
+
+
+# UI FOR CURRENCIES LIST
+def display_all_currencies(data: dict[str, str ]):
+
+    table = Table(title="All Currencies Available",
+                  show_header=True,
+                  header_style="bold magenta")
+
+    table.add_column("ISO code", style="cyan", justify="left")
+    table.add_column("Currency Name", style="cyan", justify="right")
+
+    for key, value in data.items():
+        table.add_row(key, value)
+
+    console.print(table)
+        
