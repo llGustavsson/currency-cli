@@ -19,7 +19,7 @@ dependencies = [
 test = ["pytest>=9.0.0"]
 
 [project.scripts]
-currency = "main:app"
+currency = "app.cli:app"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
